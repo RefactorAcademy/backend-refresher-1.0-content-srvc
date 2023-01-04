@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ContentDto } from './submodules/backend-refresher-1.0-dtos/src/dtos/content.dto';
 import { RMQPayloadDto } from './submodules/backend-refresher-1.0-rmq/src/dtos/rmqPayload.dto';
 import { PlatformEvents } from './submodules/backend-refresher-1.0-rmq/src/enums/platformEvents';
 import { RmqTopics } from './submodules/backend-refresher-1.0-rmq/src/enums/rmqTopics';
@@ -15,6 +16,8 @@ export class AppService {
   ){}
 
   getHello(): string {
+
+    console.log("Step 2")
     
     let rmqPayload: RMQPayloadDto = {
       event: PlatformEvents.CONTENT_CREATION,
@@ -31,5 +34,21 @@ export class AppService {
     
     return "emit successful"
     
+  }
+
+  async createContent(content: ContentDto){
+    console.log("Proceeding to create content")
+    let rmqPayload: RMQPayloadDto = {
+      event: PlatformEvents.CONTENT_CREATION,
+      payload: content
+    }
+
+    this.msgBrokerService.emitToQueue(
+      rmqPayload,
+      RmqTopics.CONTENT_CREATION_TOPIC,
+      this.contentQueueClient
+    )
+    
+    return "Your request has been accepted !!"
   }
 }
