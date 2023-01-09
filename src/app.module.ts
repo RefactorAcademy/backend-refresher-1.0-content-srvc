@@ -20,7 +20,7 @@ import { MsgBrokerOpsService } from './submodules/backend-refresher-1.0-rmq/src/
       database: 'backend-socialmedia',
       entities: [ User, Content ],
       synchronize: true,
-      logging: false
+      logging: true
     }),
     ClientsModule.register([
       {

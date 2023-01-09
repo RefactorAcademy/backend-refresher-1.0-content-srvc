@@ -32,6 +32,28 @@ export class ContentService {
 
   }
 
+  async fetchContentByUser(userId: number){
+    try{
+      // let fetchedContent = await this.contentRepository.find({ where: {
+      //   user : { id: userId }
+      // }})
+
+      /// validation of userId
+
+      let fetchedContent = await this.contentRepository.createQueryBuilder("content")
+                                                       .select("*")
+                                                       .where("content.user = :userId",{ userId: userId })
+                                                       .andWhere("content.type = :type",{ type: "POST" })
+                                                    
+                                                       .execute() 
+
+      return fetchedContent;
+    }
+    catch(err){
+      throw err;
+    }
+  }
+
   async findAll(){
     try{
       let retrievedContents = await this.contentRepository.find();

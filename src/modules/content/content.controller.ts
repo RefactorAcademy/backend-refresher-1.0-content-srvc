@@ -1,4 +1,4 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import { EventPattern } from "@nestjs/microservices";
 import { RMQPayloadDto } from "src/submodules/backend-refresher-1.0-rmq/src/dtos/rmqPayload.dto";
 import { RmqTopics } from "src/submodules/backend-refresher-1.0-rmq/src/enums/rmqTopics";
@@ -29,6 +29,21 @@ export default class ContentController{
         console.log(err)
       }
       
+    }
+
+    // localhost:5000/content/user-profile/5 --> url param localhost:5000/content/user-profile?userId=5&email="xyz" . ---> query param
+      // fetch all posts of a particular user
+      @Get('/user-profile')
+      async fetchContentByUser(@Query() query: { userId: number }){
+        try{
+          let { userId } = query;
+          let fetchedContent = await this.contentService.fetchContentByUser(userId);
+          return fetchedContent;
+        }
+        catch(err){
+          console.log(err)
+        }
+      }
       
-  }
+ 
 }
